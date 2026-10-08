@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ezhuthu Web Novels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: sticky top bar, single 1120px column; covers are typeset blocks, the reader is a centred 680px page with a slide-in paragraph-comment panel */
+:root{
+  --bg:#F3F4F1; --surface:#FFFFFF; --surface-2:#E8EBE5; --ink:#1A1E1C; --muted:#5C6560; --line:#D5DAD2;
+  --accent:#0E7466; --accent-ink:#FFFFFF; --accent-soft:#D9EEE9;
+  --gold:#9C7116; --gold-soft:#F5E8C6; --danger:#B4323C;
+  --sepia-bg:#F1E7D2; --sepia-ink:#3B2F22; --sepia-line:#D9CBAE;
+  --night-bg:#0E1012; --night-ink:#B9C0C4; --night-line:#262B2F;
+  --f-display:"Young Serif", Georgia, "Times New Roman", serif;
+  --f-read:"Literata", Georgia, serif;
+  --f-ui:"Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111513; --surface:#191E1C; --surface-2:#222926; --ink:#E6EAE6; --muted:#98A29C; --line:#2D3532;
+  --accent:#43B8A4; --accent-ink:#06201C; --accent-soft:#16312C;
+  --gold:#E2B44B; --gold-soft:#3A3120; --danger:#E06A72; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#111513; --surface:#191E1C; --surface-2:#222926; --ink:#E6EAE6; --muted:#98A29C; --line:#2D3532;
+  --accent:#43B8A4; --accent-ink:#06201C; --accent-soft:#16312C;
+  --gold:#E2B44B; --gold-soft:#3A3120; --danger:#E06A72; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;text-wrap:balance;margin:0;line-height:1.15}
+a{color:var(--accent)}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:16px}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:18px;padding-block:10px;flex-wrap:wrap}
+.logo{display:flex;align-items:baseline;gap:8px;background:none;border:0;padding:0}
+.logo b{font-family:var(--f-display);font-size:24px;font-weight:400;letter-spacing:-.01em}
+.logo span{font-size:12px;color:var(--muted)}
+.nav{display:flex;gap:4px;overflow-x:auto;min-width:0;flex:1}
+.nav button{background:none;border:0;padding:7px 12px;border-radius:999px;font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap}
+.nav button[aria-current="true"]{background:var(--surface-2);color:var(--ink)}
+.search{display:flex;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:0 12px;min-width:0}
+.search input{border:0;background:none;padding:7px 4px;width:170px;min-width:0;outline:none}
+.coins{display:flex;align-items:center;gap:6px;background:var(--gold-soft);color:var(--gold);border:0;border-radius:999px;padding:6px 12px;font-weight:700}
+.coin{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--gold);box-shadow:inset 0 0 0 2px var(--gold-soft)}
+@media (max-width:720px){.top .wrap{gap:10px}.search{order:3;flex:1 1 100%}.search input{width:100%}.nav{order:4;flex:1 1 100%}}
+
+main{padding-block:24px 64px}
+section+section{margin-top:40px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+.sec-head h2{font-size:24px}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 16px;font-weight:600;font-size:14px}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.gold{background:var(--gold);color:var(--surface);border-color:var(--gold)}
+.btn.ghost{background:none}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
+.pill{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--surface-2);color:var(--muted)}
+.pill.done{background:var(--accent-soft);color:var(--accent)}
+
+/* covers */
+.cover{position:relative;aspect-ratio:3/4;max-width:100%;border-radius:6px;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:10%;box-shadow:0 1px 0 rgba(0,0,0,.08),0 8px 20px -12px rgba(0,0,0,.45);isolation:isolate;text-align:left}
+.cover::before{content:attr(data-glyph);position:absolute;right:-8%;top:-12%;font-family:var(--f-display);font-size:9em;line-height:1;opacity:.16;z-index:-1}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.45));z-index:-1}
+.cover .ct{font-family:var(--f-display);font-size:1.05em;line-height:1.1;text-wrap:balance}
+.cover .ca{font-size:.62em;opacity:.85;margin-top:.5em;letter-spacing:.06em;text-transform:uppercase}
+.cover.lg{font-size:26px}.cover.md{font-size:17px}.cover.sm{font-size:12px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:240px 1fr;gap:32px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px}
+.hero h1{font-size:clamp(30px,5vw,46px);margin:6px 0 10px}
+.hero p{max-width:60ch;color:var(--muted);margin:0 0 18px}
+.hero .meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:18px}
+.hero .meta b{color:var(--ink)}
+.hero-dots{display:flex;gap:6px;margin-top:14px}
+.hero-dots button{width:22px;height:4px;border:0;border-radius:2px;background:var(--line);padding:0}
+.hero-dots button[aria-current="true"]{background:var(--accent)}
+@media (max-width:640px){.hero{grid-template-columns:1fr;padding:20px}.hero .cover{width:170px}}
+
+/* grids */
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:20px 16px}
+.card{background:none;border:0;padding:0;text-align:left;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card .t{font-weight:700;font-size:14px;line-height:1.3}
+.card .s{font-size:12px;color:var(--muted)}
+.two{display:grid;grid-template-columns:1.4fr 1fr;gap:32px}
+@media (max-width:860px){.two{grid-template-columns:1fr}}
+.list{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:auto 56px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);background:none;border-left:0;border-right:0;border-top:0;text-align:left;width:100%}
+.row .rk{font-family:var(--f-display);font-size:22px;width:30px;text-align:center;color:var(--muted)}
+.row:nth-child(-n+3) .rk{color:var(--gold)}
+.row .info{min-width:0}
+.row .t{font-weight:700}
+.row .s{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .v{text-align:right;font-size:13px}
+.row .v b{display:block;font-size:16px}
+.upd{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:10px 0;border-bottom:1px solid var(--line);background:none;border-left:0;border-right:0;border-top:0;text-align:left;width:100%}
+.upd .t{font-weight:700;min-width:0}
+.upd .c{font-size:13px;color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upd .w{font-size:12px;color:var(--muted);grid-row:1/3;grid-column:2;align-self:center}
+
+/* book page */
+.book-top{display:grid;grid-template-columns:220px 1fr;gap:32px}
+.book-top h1{font-size:clamp(28px,4.5vw,42px);margin:8px 0 6px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);margin:18px 0}
+.stats div{padding:12px 14px;border-left:1px solid var(--line)}
+.stats div:first-child{border-left:0}
+.stats b{display:block;font-size:20px;font-family:var(--f-display);font-weight:400}
+.stats span{font-size:12px;color:var(--muted)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.syn{max-width:65ch;font-family:var(--f-read);font-size:16px;line-height:1.7}
+@media (max-width:640px){.book-top{grid-template-columns:1fr}.book-top .cover{width:160px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stats div:nth-child(3){border-left:0}.stats div:nth-child(n+3){border-top:1px solid var(--line)}}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;font-weight:700;color:var(--muted);white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--accent)}
+.chlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0 24px}
+.ch{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);background:none;border-left:0;border-right:0;border-top:0;text-align:left;font-size:14px;min-width:0}
+.ch span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.ch .lk{color:var(--gold);font-size:12px;font-weight:700;white-space:nowrap}
+.ch .fr{color:var(--accent);font-size:12px;font-weight:700}
+.ch.read span:first-child{color:var(--muted)}
+.review{padding:14px 0;border-bottom:1px solid var(--line)}
+.review .h{display:flex;gap:10px;align-items:center;font-size:13px}
+.stars{color:var(--gold);letter-spacing:2px}
+.review p{margin:6px 0 0;max-width:70ch}
+.pager{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:16px}
+
+/* reader */
+.reader{--rp:var(--surface);--ri:var(--ink);--rl:var(--line);background:var(--rp);color:var(--ri);border-radius:14px;border:1px solid var(--rl)}
+.reader.sepia{--rp:var(--sepia-bg);--ri:var(--sepia-ink);--rl:var(--sepia-line)}
+.reader.night{--rp:var(--night-bg);--ri:var(--night-ink);--rl:var(--night-line)}
+.rbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--rl);flex-wrap:wrap}
+.rbar .bt{font-size:13px;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:none;border:0;color:inherit;padding:0}
+.rtools{display:flex;gap:6px;align-items:center}
+.rtools button{background:none;border:1px solid var(--rl);color:inherit;border-radius:8px;padding:5px 10px;font-size:13px;font-weight:600}
+.rtools button[aria-pressed="true"]{background:var(--ri);color:var(--rp)}
+.page{max-width:680px;margin:0 auto;padding:40px 20px 32px}
+.page h1{font-size:30px;margin-bottom:6px}
+.page .cm{font-size:13px;opacity:.7;margin-bottom:30px}
+.para{position:relative;font-family:var(--f-read);font-size:var(--fs,19px);line-height:1.8;margin:0 0 1.1em}
+.pc{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:20px;padding:0 6px;margin-left:6px;border-radius:10px 10px 10px 2px;border:1px solid var(--rl);background:none;color:inherit;opacity:.55;font-family:var(--f-ui);font-size:11px;font-weight:700;vertical-align:2px}
+.pc:hover,.pc.on{opacity:1;border-color:var(--accent);color:var(--accent)}
+.rnav{display:flex;justify-content:space-between;gap:10px;padding:16px;border-top:1px solid var(--rl)}
+.rnav .btn{background:none;color:inherit;border-color:var(--rl)}
+.lock{max-width:440px;margin:20px auto 10px;text-align:center;border:1px dashed var(--rl);border-radius:12px;padding:24px}
+.lock h3{font-size:22px;margin-bottom:6px}
+.lock .price{font-size:28px;font-family:var(--f-display);color:var(--gold);margin:10px 0}
+.fade{position:relative;max-height:150px;overflow:hidden}
+.fade::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,var(--rp))}
+.vote-strip{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:0 20px 28px}
+.vote-strip .btn{background:none;color:inherit;border-color:var(--rl)}
+
+/* side panel */
+.panel{position:fixed;z-index:40;right:0;top:0;bottom:0;width:min(400px,100%);background:var(--surface);border-left:1px solid var(--line);display:flex;flex-direction:column;box-shadow:-12px 0 30px -20px rgba(0,0,0,.5);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.panel header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+.panel .q{padding:12px 16px;font-family:var(--f-read);font-size:14px;color:var(--muted);border-bottom:1px solid var(--line);max-height:120px;overflow:auto}
+.panel .body{flex:1;overflow:auto;padding:4px 16px}
+.cmt{padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.cmt .u{font-weight:700;font-size:13px}
+.cmt .u small{font-weight:500;color:var(--muted);margin-left:6px}
+.cmt p{margin:4px 0 0}
+.panel form{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line)}
+.panel input{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:8px 14px}
+.close{background:none;border:0;font-size:22px;line-height:1;color:var(--muted)}
+.toc{position:fixed;z-index:40;left:0;top:0;bottom:0;width:min(360px,100%);background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.toc header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+.toc .body{overflow:auto;padding:0 16px}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:30}
+
+/* forms / studio / wallet */
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:13px;font-weight:700}
+.field input,.field select,.field textarea{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 12px}
+.field textarea{min-height:220px;font-family:var(--f-read);font-size:16px;line-height:1.7;resize:vertical}
+.form{display:grid;gap:16px;max-width:720px}
+.form .r2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:560px){.form .r2{grid-template-columns:1fr}}
+.panelbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.swatches button{width:34px;height:34px;border-radius:8px;border:2px solid transparent}
+.swatches button[aria-pressed="true"]{border-color:var(--ink)}
+.packs{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.pack{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.pack b{font-family:var(--f-display);font-weight:400;font-size:28px;color:var(--gold)}
+.note{font-size:13px;color:var(--muted);background:var(--surface-2);border-radius:8px;padding:10px 12px}
+.prog{height:4px;background:var(--surface-2);border-radius:2px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent)}
+.empty{text-align:center;padding:48px 16px;color:var(--muted)}
+.empty h3{color:var(--ink);font-size:22px;margin-bottom:6px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;z-index:60;max-width:calc(100% - 32px)}
+.ub-list .upd{grid-template-columns:1fr auto auto}
+@media (prefers-reduced-motion:no-preference){.panel,.toc{animation:sl .18s ease-out}.toc{animation-name:sr}@keyframes sl{from{transform:translateX(20px);opacity:.6}}@keyframes sr{from{transform:translateX(-20px);opacity:.6}}}
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <button class="logo" id="logo" aria-label="Ezhuthu home"><b>Ezhuthu</b><span>web novels</span></button>
+    <nav class="nav" id="nav">
+      <button data-go="discover">Discover</button>
+      <button data-go="browse">Browse</button>
+      <button data-go="rankings">Rankings</button>
+      <button data-go="library">Library</button>
+      <button data-go="studio">Write</button>
+    </nav>
+    <label class="search"><span class="muted" aria-hidden="true">⌕</span><input id="q" type="search" placeholder="Search titles or authors" aria-label="Search"></label>
+    <button class="coins num" id="coinbtn" title="Wallet"><i class="coin"></i><span id="coinv">0</span></button>
+  </div>
+</header>
+<main class="wrap" id="app"></main>
+<div id="overlay"></div>
+<div id="toastbox"></div>
+
+<script>
+/* ---------- catalogue ---------- */
+const GENRES=["Xianxia","Fantasy","Urban","Sci-fi","Romance","Horror","Historical","Game"];
+const BOOKS=[
+{id:"salt-ledger",title:"The Salt Ledger",author:"Meera Thottam",genre:"Historical",status:"Ongoing",chapters:412,words:1.03,rating:4.8,readers:182400,power:9120,c:["#123B4A","#B0742A"],g:"₹",free:12,price:11,
+tags:["Merchant politics","Genius MC","Spice trade","Slow burn"],
+syn:"In the pepper port of Kollam, Anantha is a junior clerk who forgets nothing he has ever read. When three merchant houses go to war over a single missing cargo, every one of them wants the boy who remembers where the money went. Every one of them would also prefer he stopped remembering.",
+heads:["The Clerk Who Counted Wrong","A Cargo That Never Sailed","Pepper Has a Price","The Arab Factor's Tea","Ink on the Wrong Page","What the Harbourmaster Owes","Night at the Customs House","Three Houses, One Debt","A Ledger Burns Slowly","The Zamorin's Letter"],
+pool:["The monsoon had come early, and the warehouses along the Kollam waterfront smelled of wet jute and black pepper. Anantha sat at the end of the long clerks' bench with his sleeves rolled up, copying a manifest he had already memorised twice.",
+"“You’ve stopped writing,” said Kesavan, the senior clerk, without looking up. “Either you’re ill or you’ve found something. I can’t afford either.”",
+"Anantha set down his reed pen. “The Chinese junk that left on the ninth carried four hundred bales. The receipt from the Portuguese factor says it unloaded four hundred and forty in Malacca. Forty bales grew on the water.”",
+"Kesavan finally looked at him. It was not the look of a man pleased by diligence. It was the look of a man calculating how far a sixteen-year-old body would drift before the tide brought it back.",
+"“Pepper doesn’t grow on the water,” Kesavan said quietly. “And you never saw that receipt. Go home, boy. Eat something. Forget something, for once in your life.”",
+"He went home the long way, past the Arab quarter and the Nair house with its new teak gate, and he did not forget anything at all. That was the trouble with Anantha. He never had."]},
+{id:"ninth-heaven",title:"Ninth Heaven Is a Landfill",author:"Lan Qiuyue",genre:"Xianxia",status:"Ongoing",chapters:1186,words:2.71,rating:4.6,readers:540200,power:15340,c:["#2E1B4F","#2F8F6B"],g:"丹",free:20,price:9,
+tags:["Comedy","Cultivation","Trash to treasure","Sect politics"],
+syn:"The Azure Cloud Sect throws away more spirit treasures in a month than a minor kingdom owns. Outer disciple Bai Fan is assigned to sort the sect's rubbish. He is the only person in three hundred years to read the labels.",
+heads:["Assigned to the Pit","A Cracked Cauldron Still Boils","Elder Gu Wants His Socks Back","Pill Residue Is Still a Pill","The Inner Disciples Laugh","Rubbish Has a Lineage","A Sword That Was Only Bent","Tribute Season","The Pit Has a Basement","Heaven Does Not Recycle"],
+pool:["Bai Fan received his assignment on a jade slip that someone had used to prop up a table leg. It read, in elegant calligraphy, Spirit Refuse Management, Pit Nine. Below that someone had added in a cruder hand: good luck.",
+"Pit Nine was a valley. Not a ditch, not a hole, but an entire mist-shrouded valley filled to the treeline with broken cauldrons, snapped flying swords, and the gently glowing remains of failed pills.",
+"“Do I sort it?” he asked the old caretaker, who was asleep in a cracked bathtub that hummed with residual qi.",
+"“Sort it?” The old man opened one eye. “Boy, the last disciple who tried to sort it reached Foundation Establishment by accident and the inner elders made him sign a document saying he hadn’t.”",
+"Bai Fan picked up the nearest object. It was a bronze bell with a dent in it. Etched along the rim, worn but legible, were the words Soul-Calming Bell, Grade Earth, Do Not Strike Twice.",
+"He did not strike it twice. He struck it once, very gently, and three hundred years of drifting rubbish ghosts sat up in the valley and turned to look at him."]},
+{id:"grey-signal",title:"Grey Signal",author:"Ilse Varga",genre:"Sci-fi",status:"Completed",chapters:236,words:0.58,rating:4.9,readers:96100,power:6870,c:["#1F2A33","#6A8CA8"],g:"Ψ",free:15,price:12,
+tags:["Hard SF","Time paradox","Lonely station","Completed"],
+syn:"Relay operator Noor Haddad spends eighteen months alone at the edge of the Kuiper belt passing messages home. Then her ship starts sending her messages three days before it writes them, and one of them asks her not to open the airlock on day 412.",
+heads:["Day 409","The Packet With No Origin","Checksums Don't Lie","Calling Home Takes Eleven Hours","Day 410","A Reply to a Question Not Asked","Hull Temperature","The Other Noor","Day 411","Airlock"],
+pool:["The packet arrived at 03:12 station time, which meant nothing, because there was no one out here to keep station time but Noor and the relay's own patient clock.",
+"It carried the ship's own signature. Not a copy, not a spoof she could find. The checksum was clean. The timestamp read three days from now.",
+"She logged it, flagged it, and made tea, because that was what you did with things you couldn’t explain at three in the morning eleven light-hours from anyone who could.",
+"The message body was four words in her own shorthand. DON’T OPEN IT. 412.",
+"Noor looked at the calendar on the bulkhead. Day 409. She looked at the inner airlock door, which she had opened six hundred times without thinking about it once.",
+"Then she sat down at the console and did the only sensible thing. She sent a reply to a ship that had not written to her yet."]},
+{id:"rent-underworld",title:"Rent Is Due in the Underworld",author:"Owen Hartley",genre:"Urban",status:"Ongoing",chapters:318,words:0.79,rating:4.5,readers:121700,power:7740,c:["#3A1E1E","#C2A46A"],g:"⚿",free:10,price:10,
+tags:["Urban fantasy","Landlord MC","Northern England","Dark comedy"],
+syn:"Danny Pike inherits a terraced block in Burnley from a great-uncle he never met. The tenants pay on time, never complain about the boiler, and have all been dead since 1974. The council would like a word about planning permission.",
+heads:["Probate","Flat 3 Keeps the Heating On","The Tenant Agreement Is Handwritten","Council Tax for the Deceased","Mrs Aspinall's Cat","Damp Is a Symptom","The Previous Landlord","Inspection Day","A Lease Signed in Soot","Eviction Notice"],
+pool:["The solicitor in Accrington handed Danny a key on a loop of green string and said, with feeling, that he was very sorry for his loss and also very glad it was no longer his problem.",
+"The building on Colne Road was three storeys of blackened stone with a chip shop underneath. Every window was lit. It was half past two on a Tuesday afternoon.",
+"“You’ll be the new one,” said the woman in Flat 1, who wore a housecoat and curlers and a faint smell of coal smoke. “Rent’s under the mat. It always is. Mind the third step.”",
+"Danny looked under the mat. There was an envelope with eleven pounds forty in pre-decimal coin and a note that said Sorry it’s late, love, the Co-op shut early.",
+"He minded the third step. The fourth one minded him back, and he spent a long, quiet moment hanging onto the banister while something underneath the stairs breathed out.",
+"That night he looked his great-uncle up. Albert Pike, landlord, died 1974. Same year as every name on the tenancy book."]},
+{id:"duke-rain",title:"The Duke Who Counted Rain",author:"Clementine Ashby",genre:"Romance",status:"Completed",chapters:164,words:0.41,rating:4.7,readers:88300,power:5210,c:["#3C4B3A","#D7B9A0"],g:"❦",free:14,price:8,
+tags:["Arranged marriage","Grumpy duke","Agriculture","Banter"],
+syn:"Lady Harriet Vane expects her arranged husband to be cold, distant, or cruel. She did not expect a duke who keeps a rain gauge on every estate, writes to her daily about drainage, and refuses to attend balls during the planting season.",
+heads:["A Proposal by Post","Seven Inches in March","The Duke Does Not Dance","Drainage, Again","Lady Harriet Reads the Ledger","A Flood at Ashcombe","The Ball He Missed","Turnips and Other Declarations","The Dry Summer","Counting Together"],
+pool:["The proposal arrived folded inside a report on the spring rainfall at Ashcombe, which Harriet read first because it was on top.",
+"“Seven inches in March,” she told her sister. “He says the lower fields are waterlogged and he would be obliged if I would consider marriage at my earliest convenience.”",
+"“That is the least romantic thing I have ever heard,” said Lydia.",
+"Harriet turned the page. Underneath the rainfall figures, in the same cramped hand, he had written: I am told I am difficult. I am told this is a disadvantage. I would rather you knew it now than discovered it in June.",
+"She read it twice. Then she found a pen and wrote back asking how he measured evaporation, because she suspected he was doing it wrong.",
+"His reply came by the next post and ran to nine pages, and Lydia, reading over her shoulder, said that perhaps it was a little romantic after all."]},
+{id:"level-zero",title:"Level Zero Cartographer",author:"Park Seo-jin",genre:"Game",status:"Ongoing",chapters:742,words:1.62,rating:4.4,readers:310500,power:11980,c:["#0E3B3F","#E0C04A"],g:"◈",free:25,price:9,
+tags:["LitRPG","VRMMO","Underdog class","System"],
+syn:"Everyone in Aethergate rerolls the Cartographer class. It has no attacks and no skills, only a map. Min-ho can't afford a new account. So he keeps drawing, and finds the edges of the map are where the developers forgot to lock the doors.",
+heads:["Class Assigned: Cartographer","Reroll Not Available","The Map Has a Margin","Party Rejected (x14)","Unmapped Tile","A Door Behind the Tutorial","Dev Notes in the Wall","The Guild Wants a Copy","World Boss Pathing","Out of Bounds"],
+pool:["[Class assigned: Cartographer.] The notification hung in front of Min-ho’s eyes with the specific cheerful blue of a mistake that could not be undone.",
+"In the starter village, three players saw his class tag and laughed out loud. One of them offered to buy his account for the price of a sandwich.",
+"He opened his skill window. It contained one item. [Survey: Record terrain you have personally walked. Cost: 0 mana. Cooldown: none.]",
+"So he walked. Around the fountain, behind the blacksmith, along the fence of the tutorial farm where nobody went because there was nothing to kill.",
+"At the corner of the fence his map drew a tile that did not match the world. It was grey, outlined in dashes, and labelled in tiny developer font: TODO remove before launch.",
+"Min-ho stood very still for a while. Then he stepped onto it."]},
+{id:"well-remembers",title:"What the Well Remembers",author:"Sreeja Panicker",genre:"Horror",status:"Ongoing",chapters:128,words:0.31,rating:4.7,readers:64800,power:4930,c:["#14211C","#5E7A5A"],g:"◯",free:10,price:10,
+tags:["Folk horror","Kerala","Ancestral house","Slow dread"],
+syn:"The old well behind the tharavad in Thrissur answers any question asked of it at dusk, in the voice of whoever drowned there last. Lakshmi comes home for her grandmother's funeral and learns the family has been feeding it questions for two hundred years.",
+heads:["Sanchayanam","The Bucket Comes Up Dry","Ammamma's Voice","Do Not Ask Twice","The Locked Ara","Records in Grantha Script","What Uncle Asked","The Well Is Lower","Karkidakam Rain","The Last Question"],
+pool:["The funeral rites ended at noon. By dusk the relatives had gone back to their cars and their airports, and the tharavad was quiet except for the crows on the tiled roof.",
+"Lakshmi went to the well because her grandmother had always gone to the well at this hour, and because grief makes you repeat the habits of the dead.",
+"She lowered the bucket. The rope ran out longer than she remembered, much longer, and when it finally went slack the sound that came up was not water.",
+"“Molé,” said the well, in her grandmother’s voice. “You took your time. Ask your question.”",
+"Behind her the kitchen door creaked. Her uncle stood in the light with his face very still. “Don’t,” he said. “Whatever it is. Not on the first night.”",
+"But Lakshmi had already asked, and the well had already started to answer."]},
+{id:"ember-throne",title:"Ember Throne Apprentice",author:"Tomas Reyne",genre:"Fantasy",status:"Ongoing",chapters:521,words:1.24,rating:4.5,readers:201900,power:8650,c:["#3B1A10","#D9682B"],g:"♛",free:15,price:10,
+tags:["Smithing","Kingdom building","Magic system","Political"],
+syn:"In Varrow, kings are not born or elected. They are chosen by crowns, and crowns are made by smiths. Apprentice Edda forges her first crown as a practice piece. It chooses the stable boy, and four noble houses start sharpening knives.",
+heads:["Practice Piece","The Crown Warms","A Stable Boy Kneels","The Guild Convenes","Quenching in Blood","Lord Harl Visits the Forge","Ore from the Old Mine","The Second Crown","A Coronation in Mud","Fire Remembers"],
+pool:["Master Oswin told her to make a crown badly. “Every apprentice makes one,” he said. “Tin and copper. It won’t choose anyone. It’s for learning the shape.”",
+"Edda made it well, because she did not know how to make anything badly, and when she set it on the anvil to cool it rang like a struck bell.",
+"The stable boy, Pell, came in with a bucket of water for the quench trough. He had straw in his hair and mud to his knees and the crown turned on the anvil to face him.",
+"Nobody moved. The bellows sighed out. Outside a dog barked twice and stopped.",
+"“Oswin,” Edda said, very carefully. “What happens if a practice crown chooses someone?”",
+"Her master put down his hammer. “Then the girl who made it should bar the door,” he said, “and the boy should start praying it didn’t mean it.”"]},
+{id:"monsoon-courier",title:"Monsoon Courier",author:"Arjun Menon",genre:"Urban",status:"Ongoing",chapters:276,words:0.66,rating:4.6,readers:73200,power:6020,c:["#123A55","#4FA3A0"],g:"☂",free:12,price:9,
+tags:["Kochi","Delivery rider","Spirits","Found family"],
+syn:"Rahul delivers food in Kochi on a second-hand scooter. During heavy rain his app shows a second set of orders: biryani to a banyan tree, tea to a drowned ferry, porotta to a yakshi on MG Road who tips in gold.",
+heads:["Surge Pricing","Order #0000","The Banyan Tips Well","Rating: One Star (Ghost)","Ferry at Fort Kochi","Kallu for the Kavu","The App Updates Itself","Dry Day","Late Delivery","Rain Stops"],
+pool:["The rain came down so hard on Edappally junction that the traffic lights looked like they were underwater. Rahul pulled his raincoat tighter and checked the app.",
+"Three orders. Two normal. The third had no restaurant name, only a location pin on a banyan tree behind the old temple and a note: extra salna, the last boy forgot.",
+"The payout was eight hundred rupees. For one parcel of biryani. He accepted it before his common sense could catch up.",
+"The banyan was enormous and dripping. There was no house, no gate, no customer. He stood under it holding the parcel and felt very stupid.",
+"“Put it at the roots,” said someone above him, in the comfortable Malayalam of an old aunty. “And tell your app I want you again next time. You’re polite.”",
+"When he got back on the scooter there was a gold coin in his raincoat pocket and a five-star rating on his profile from a user called Kavu."]},
+{id:"starfall-accord",title:"Starfall Accord",author:"Ilse Varga",genre:"Sci-fi",status:"Ongoing",chapters:389,words:0.95,rating:4.3,readers:58700,power:3880,c:["#1A1830","#9B6BD1"],g:"✶",free:15,price:11,
+tags:["Space opera","Diplomacy","Alien politics","Intrigue"],
+syn:"Junior translator Tavi Okonkwo is the only human who speaks the trade-tongue of the Vesh. When the senior ambassador dies on the eve of signing, she has nine hours to finish a treaty she was hired to proofread.",
+heads:["Proofreader","The Ambassador's Chair","Nine Hours","Vesh Has No Word for No","The Fourth Clause","Breakfast with a Warlord","Mistranslation","Recess","The Signing Hall","Accord"],
+pool:["Ambassador Reyes died at 21:40 ship time, quietly, in the middle of a sentence about fishing rights.",
+"By 21:55 the delegation had established three things. It was his heart. There was no replacement within six weeks of travel. And the Vesh did not reschedule.",
+"“You’ve read the draft,” said the chief of staff to Tavi. It was not a question. She had read every draft. She had corrected the commas.",
+"“I’m a translator,” she said. “I don’t negotiate.”",
+"“Tonight you do. Their speaker requested you by name. Apparently you’re the only one of us who conjugates correctly.”",
+"Tavi looked at the treaty, forty-one clauses in two languages, and at the clock, which said nine hours. Then she asked for coffee and a copy of the fourth clause."]}
+];
+const HANDLES=["teapotdao","inkmoth","rainclerk","pillresidue","quietgauge","sixthsect","mangochutney","lanternfox","oldferry","copperbell","bookworm_kl","nightshift_nurse","wanderingpen","grumpyreader","sugarcane","tidecalc"];
+const COMMENTS=["This line got me. Rereading the whole paragraph.","The author really knows how to end a scene.","Called it three chapters ago, nobody believed me.","Okay this is the moment it gets good.","Small detail but I love how it comes back later.","Laughing out loud on the bus, thanks.","Not the reaction I expected and I respect it.","Translation note: this phrasing is perfect.","The dread here is unreal.","Who else is reading this at 2am","I need a whole side story about this character.","Bookmarked. This is the one.","The pacing in this bit is so good.","Every time I think I know where it's going.","Power stone deployed.","This is why I keep paying for chapters."];
+const REVIEWS=[[5,"Best thing on the platform right now. The protagonist actually thinks before acting."],[4,"Slow start but chapter 30 onward is excellent. Worth the coins."],[5,"Characters have their own agendas. Nobody exists just to praise the lead."],[3,"Good premise, some arcs drag. Still reading."],[5,"Updates every day without fail and the quality holds."],[4,"Side characters steal the show. Want more of them."]];
+const SWATCH=[["#123B4A","#B0742A"],["#2E1B4F","#2F8F6B"],["#3A1E1E","#C2A46A"],["#0E3B3F","#E0C04A"],["#3B1A10","#D9682B"],["#1A1830","#9B6BD1"],["#14211C","#5E7A5A"],["#3C4B3A","#D7B9A0"]];
+
+/* ---------- state ---------- */
+const KEY="ezhuthu.v1";
+const today=()=>new Date().toISOString().slice(0,10);
+let S={coins:150,unlocked:{},library:[],progress:{},votes:{},stones:3,stoneDay:today(),myComments:{},userBooks:[],prefs:{fs:19,theme:"auto",auto:false},checkin:"",history:[]};
+try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
+if(S.stoneDay!==today()){S.stones=3;S.stoneDay=today();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+function hash(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
+const fmt=n=>n>=1e6?(n/1e6).toFixed(1)+"M":n>=1e3?(n/1e3).toFixed(n>=1e4?0:1)+"K":String(n);
+const all=()=>[...S.userBooks.map(userToBook),...BOOKS];
+const byId=id=>all().find(b=>b.id===id);
+function userToBook(u){return {...u,chapters:u.ch.length,words:+(u.ch.reduce((a,c)=>a+c.body.split(/\s+/).length,0)/1e6).toFixed(3),rating:0,readers:0,power:0,free:u.ch.findIndex(c=>c.paid)<0?u.ch.length:u.ch.findIndex(c=>c.paid),price:8,tags:["New","Original"],user:true,heads:u.ch.map(c=>c.title)};}
+const power=b=>b.power+(S.votes[b.id]||0);
+function chTitle(b,n){if(b.user)return b.heads[n-1]||"Chapter "+n;const H=b.heads.length;return n<=H?b.heads[n-1]:`${b.heads[(n-1)%H]} (${Math.floor((n-1)/H)+1})`;}
+function chText(b,n){
+  if(b.user)return b.ch[n-1].body.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean);
+  const p=b.pool;if(n===1)return p;
+  const r=hash(b.id+n)%p.length;return[...p.slice(r),...p.slice(0,r)];
+}
+const isFree=(b,n)=>n<=b.free;
+const isOpen=(b,n)=>isFree(b,n)||!!(S.unlocked[b.id]&&S.unlocked[b.id].includes(n));
+function cover(b,size="md"){return `<div class="cover ${size}" data-glyph="${esc(b.g||b.title[0])}" style="background:linear-gradient(155deg,${b.c[0]} 0%,${b.c[0]} 45%,${b.c[1]} 140%)"><div class="ct">${esc(b.title)}</div><div class="ca">${esc(b.author)}</div></div>`;}
+function toast(msg){const t=document.createElement("div");t.className="toast";t.textContent=msg;$("#toastbox").replaceChildren(t);setTimeout(()=>t.remove(),2200);}
+function updCoins(){$("#coinv").textContent=S.coins;}
+function ago(b){const h=(hash(b.id)%23)+1;return h<2?"1 hour ago":h+" hours ago";}
+
+/* ---------- router ---------- */
+let V={name:"discover",p:{}};
+function go(name,p={}){V={name,p};closeOverlay();render();window.scrollTo(0,0);}
+function render(){
+  document.querySelectorAll("#nav button").forEach(b=>b.setAttribute("aria-current",String(b.dataset.go===V.name)));
+  updCoins();
+  const f={discover,browse,rankings,book,reader,library,studio,wallet,search}[V.name];
+  $("#app").innerHTML=f(V.p);
+  if(V.name==="discover")startHero();
+}
+document.addEventListener("click",e=>{
+  const g=e.target.closest("[data-go]");if(g){const d=g.dataset;go(d.go,d.id?{id:d.id,n:+d.n||undefined}:{});}
+});
+$("#logo").onclick=()=>go("discover");
+$("#coinbtn").onclick=()=>go("wallet");
+$("#q").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.value.trim())go("search",{q:e.target.value.trim()});});
+
+/* ---------- views ---------- */
+let heroI=0,heroT;
+function discover(){
+  const feat=[...BOOKS].sort((a,b)=>power(b)-power(a)).slice(0,4);
+  const b=feat[heroI%feat.length];
+  const picks=["salt-ledger","well-remembers","duke-rain","monsoon-courier","grey-signal","ember-throne"].map(byId);
+  const upd=[...all()].sort((a,c)=>hash(a.id+"u")-hash(c.id+"u")).slice(0,8);
+  const top=[...BOOKS].sort((a,c)=>power(c)-power(a)).slice(0,5);
+  const cont=S.history.map(byId).filter(Boolean).slice(0,6);
+  return `
+  <section class="hero" aria-label="Featured">
+    <button class="card" data-go="book" data-id="${b.id}" aria-label="${esc(b.title)}">${cover(b,"lg")}</button>
+    <div>
+      <div class="eyebrow">#${feat.indexOf(b)+1} in power ranking · ${b.genre}</div>
+      <h1>${esc(b.title)}</h1>
+      <div class="meta"><span><b class="num">${b.chapters}</b> chapters</span><span><b class="num">${b.words}M</b> words</span><span><b class="num">${b.rating}</b> rating</span><span>${b.status}</span></div>
+      <p>${esc(b.syn)}</p>
+      <div class="actions"><button class="btn primary" data-go="reader" data-id="${b.id}" data-n="${S.progress[b.id]||1}">${S.progress[b.id]?"Continue reading":"Read chapter 1"}</button><button class="btn" data-go="book" data-id="${b.id}">Book details</button></div>
+      <div class="hero-dots">${feat.map((f,i)=>`<button aria-label="Show ${esc(f.title)}" aria-current="${i===heroI%feat.length}" onclick="heroI=${i};render()"></button>`).join("")}</div>
+    </div>
+  </section>
+  ${cont.length?`<section><div class="sec-head"><h2>Continue reading</h2><button class="btn ghost" data-go="library">Library</button></div><div class="shelf">${cont.map(x=>card(x,`Chapter ${S.progress[x.id]||1} of ${x.chapters}`)).join("")}</div></section>`:""}
+  <section><div class="sec-head"><h2>Editors' picks</h2><button class="btn ghost" data-go="browse">Browse all</button></div>
+    <div class="shelf">${picks.map(x=>card(x)).join("")}</div></section>
+  <section class="two">
+    <div><div class="sec-head"><h2>Recently updated</h2></div><div class="list">${upd.map(x=>`<button class="upd" data-go="reader" data-id="${x.id}" data-n="${x.chapters}"><span class="t">${esc(x.title)}</span><span class="w">${x.user?"Just now":ago(x)}</span><span class="c">Ch. ${x.chapters}: ${esc(chTitle(x,x.chapters))}</span></button>`).join("")}</div></div>
+    <div><div class="sec-head"><h2>Power ranking</h2><button class="btn ghost" data-go="rankings">Full list</button></div><div class="list">${top.map((x,i)=>rankRow(x,i,"power")).join("")}</div></div>
+  </section>`;
+}
+function startHero(){clearInterval(heroT);heroT=setInterval(()=>{if(V.name!=="discover"||document.hidden||$("#overlay").childElementCount)return;heroI++;render();},9000);}
+function card(b,sub){return `<button class="card" data-go="book" data-id="${b.id}">${cover(b,"md")}<span class="t">${esc(b.title)}</span><span class="s">${sub?esc(sub):`${b.genre} · ${b.status}`}</span></button>`;}
+function rankRow(b,i,mode){
+  const val=mode==="power"?[fmt(power(b)),"power stones"]:mode==="readers"?[fmt(b.readers),"readers"]:mode==="rating"?[b.rating.toFixed(1),"rating"]:[b.chapters,"chapters"];
+  return `<button class="row" data-go="book" data-id="${b.id}"><span class="rk num">${i+1}</span><span style="width:56px">${cover(b,"sm")}</span><span class="info"><span class="t">${esc(b.title)}</span><span class="s" style="display:block">${esc(b.author)} · ${b.genre} · ${b.status}</span></span><span class="v num"><b>${val[0]}</b>${val[1]}</span></button>`;
+}
+let browseG="All",browseSort="power",browseStatus="Any";
+function browse(){
+  let list=all().filter(b=>(browseG==="All"||b.genre===browseG)&&(browseStatus==="Any"||b.status===browseStatus));
+  const sorters={power:(a,b)=>power(b)-power(a),readers:(a,b)=>b.readers-a.readers,rating:(a,b)=>b.rating-a.rating,chapters:(a,b)=>b.chapters-a.chapters};
+  list.sort(sorters[browseSort]);
+  return `<section><div class="sec-head"><h2>Browse</h2><span class="muted num">${list.length} titles</span></div>
+  <div class="chips" style="margin-bottom:12px">${["All",...GENRES].map(g=>`<button class="chip" aria-pressed="${g===browseG}" onclick="browseG='${g}';render()">${g}</button>`).join("")}</div>
+  <div class="chips" style="margin-bottom:24px;align-items:center">
+    <span class="eyebrow">Status</span>${["Any","Ongoing","Completed"].map(s=>`<button class="chip" aria-pressed="${s===browseStatus}" onclick="browseStatus='${s}';render()">${s}</button>`).join("")}
+    <span class="eyebrow" style="margin-left:12px">Sort</span>
+    <select id="sortsel" class="chip" onchange="browseSort=this.value;render()">${[["power","Power stones"],["readers","Readers"],["rating","Rating"],["chapters","Length"]].map(([v,l])=>`<option value="${v}" ${v===browseSort?"selected":""}>${l}</option>`).join("")}</select>
+  </div>
+  ${list.length?`<div class="shelf">${list.map(b=>card(b)).join("")}</div>`:`<div class="empty"><h3>Nothing here yet</h3>No ${browseStatus.toLowerCase()} ${browseG} titles. Try another filter, or write the first one.</div>`}</section>`;
+}
+let rankMode="power";
+function rankings(){
+  const modes=[["power","Power"],["readers","Most read"],["rating","Top rated"],["chapters","Longest"]];
+  const key={power:b=>power(b),readers:b=>b.readers,rating:b=>b.rating,chapters:b=>b.chapters}[rankMode];
+  const list=[...BOOKS].sort((a,b)=>key(b)-key(a));
+  return `<section><div class="sec-head"><h2>Rankings</h2><span class="muted">You have <b class="num" style="color:var(--ink)">${S.stones}</b> power stones today</span></div>
+  <div class="tabs" role="tablist">${modes.map(([k,l])=>`<button role="tab" aria-selected="${k===rankMode}" onclick="rankMode='${k}';render()">${l}</button>`).join("")}</div>
+  <div class="list">${list.map((b,i)=>rankRow(b,i,rankMode)).join("")}</div></section>`;
+}
+function search({q}){
+  const ql=q.toLowerCase();const r=all().filter(b=>(b.title+" "+b.author+" "+b.tags.join(" ")+" "+b.genre).toLowerCase().includes(ql));
+  return `<section><div class="sec-head"><h2>Results for “${esc(q)}”</h2><span class="muted num">${r.length} found</span></div>
+  ${r.length?`<div class="shelf">${r.map(b=>card(b)).join("")}</div>`:`<div class="empty"><h3>No matches</h3>Try a genre like “horror”, a tag like “cultivation”, or an author name.</div>`}</section>`;
+}
+let bookTab="chapters",chPage=0;
+function book({id}){
+  const b=byId(id);if(!b)return `<div class="empty"><h3>Book not found</h3></div>`;
+  const inLib=S.library.includes(id),prog=S.progress[id];
+  const per=60,pages=Math.ceil(b.chapters/per);chPage=Math.min(chPage,pages-1);
+  const from=chPage*per+1,to=Math.min(b.chapters,from+per-1);
+  let chs="";for(let n=from;n<=to;n++){chs+=`<button class="ch ${prog&&n<prog?"read":""}" data-go="reader" data-id="${id}" data-n="${n}"><span>${n}. ${esc(chTitle(b,n))}</span>${isFree(b,n)?`<span class="fr">Free</span>`:isOpen(b,n)?`<span class="muted" style="font-size:12px">Unlocked</span>`:`<span class="lk num">${b.price} coins</span>`}</button>`;}
+  const lockedLeft=b.chapters-b.free-((S.unlocked[id]||[]).length);
+  const revs=b.user?[]:[0,1,2,3].map(i=>REVIEWS[(hash(id)+i)%REVIEWS.length]).map((r,i)=>({u:HANDLES[(hash(id)+i*3)%HANDLES.length],s:r[0],t:r[1]}));
+  return `<section class="book-top">
+    <div>${cover(b,"lg")}</div>
+    <div style="min-width:0">
+      <div class="chips" style="align-items:center"><span class="pill ${b.status==="Completed"?"done":""}">${b.status}</span><span class="eyebrow">${b.genre}</span></div>
+      <h1>${esc(b.title)}</h1>
+      <div class="muted">by <b style="color:var(--ink)">${esc(b.author)}</b></div>
+      <div class="stats num">
+        <div><b>${b.chapters}</b><span>chapters</span></div>
+        <div><b>${b.words}M</b><span>words</span></div>
+        <div><b>${b.user?"–":fmt(b.readers)}</b><span>readers</span></div>
+        <div><b>${b.user?"–":fmt(power(b))}</b><span>power stones</span></div>
+      </div>
+      <div class="actions">
+        <button class="btn primary" data-go="reader" data-id="${id}" data-n="${prog||1}">${prog?`Continue · Ch. ${prog}`:"Start reading"}</button>
+        <button class="btn" onclick="toggleLib('${id}')">${inLib?"✓ In library":"+ Add to library"}</button>
+        ${b.user?"":`<button class="btn gold" onclick="vote('${id}')">Vote power stone</button>`}
+      </div>
+      <p class="muted" style="font-size:13px;margin-top:12px">First ${b.free} chapters free · then ${b.price} coins per chapter${lockedLeft>0&&!b.user?` · unlock all remaining for <b class="num" style="color:var(--gold)">${Math.round(lockedLeft*b.price*0.8)}</b> coins (20% off)`:""}</p>
+    </div>
+  </section>
+  <section>
+    <div class="tabs" role="tablist">${[["chapters","Chapters"],["about","About"],["reviews","Reviews"]].map(([k,l])=>`<button role="tab" aria-selected="${k===bookTab}" onclick="bookTab='${k}';render()">${l}</button>`).join("")}</div>
+    ${bookTab==="about"?`<p class="syn">${esc(b.syn)}</p><div class="chips">${b.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>`:
+      bookTab==="reviews"?(revs.length?revs.map(r=>`<div class="review"><div class="h"><b>${r.u}</b><span class="stars" aria-label="${r.s} stars">${"★".repeat(r.s)}${"☆".repeat(5-r.s)}</span></div><p>${esc(r.t)}</p></div>`).join(""):`<div class="empty"><h3>No reviews yet</h3>Reviews appear once readers finish a few chapters.</div>`):
+      `<div class="chlist">${chs}</div>${pages>1?`<div class="pager"><button class="btn" ${chPage===0?"disabled":""} onclick="chPage--;render()">Previous</button><span class="muted num">${from}–${to} of ${b.chapters}</span><button class="btn" ${chPage>=pages-1?"disabled":""} onclick="chPage++;render()">Next</button></div>`:""}
+      ${!b.user&&lockedLeft>0?`<div style="text-align:center;margin-top:16px"><button class="btn gold" onclick="unlockAll('${id}')">Unlock all ${lockedLeft} paid chapters · ${Math.round(lockedLeft*b.price*0.8)} coins</button></div>`:""}`}
+  </section>`;
+}
+function toggleLib(id){const i=S.library.indexOf(id);i<0?S.library.unshift(id):S.library.splice(i,1);save();toast(i<0?"Added to library":"Removed from library");render();}
+function vote(id){if(S.stones<1){toast("No power stones left today. More tomorrow.");return;}S.stones--;S.votes[id]=(S.votes[id]||0)+1;save();toast(`Voted. ${S.stones} stone${S.stones===1?"":"s"} left today`);render();}
+function unlockAll(id){const b=byId(id);const have=S.unlocked[id]||[];const left=[];for(let n=b.free+1;n<=b.chapters;n++)if(!have.includes(n))left.push(n);const cost=Math.round(left.length*b.price*0.8);
+  if(S.coins<cost){toast(`You need ${cost-S.coins} more coins`);go("wallet");return;}S.coins-=cost;S.unlocked[id]=have.concat(left);save();toast(`Unlocked ${left.length} chapters`);render();}
+
+/* reader */
+function reader({id,n=1}){
+  const b=byId(id);if(!b)return "";n=Math.max(1,Math.min(n,b.chapters));
+  let open=isOpen(b,n);
+  if(!open&&S.prefs.auto&&S.coins>=b.price){S.coins-=b.price;(S.unlocked[id]=S.unlocked[id]||[]).push(n);open=true;setTimeout(()=>toast(`Auto-unlocked for ${b.price} coins`),50);}
+  if(open){S.progress[id]=Math.max(S.progress[id]||0,n)===n?n:S.progress[id];S.progress[id]=n;S.history=[id,...S.history.filter(x=>x!==id)].slice(0,12);if(!S.library.includes(id))S.library.unshift(id);save();}
+  const paras=chText(b,n);const th=S.prefs.theme;
+  const words=paras.join(" ").split(/\s+/).length;
+  const body=open?paras.map((p,i)=>{const c=cCount(b,n,i);return `<p class="para">${esc(p)}<button class="pc num" aria-label="${c} comments on this paragraph" onclick="openCmts('${id}',${n},${i})">${c||"+"}</button></p>`;}).join("")
+    :`<div class="fade"><p class="para">${esc(paras[0])}</p></div>
+      <div class="lock"><div class="eyebrow">Paid chapter</div><h3>Unlock chapter ${n}</h3><div class="price num">${b.price} coins</div>
+      <p class="muted" style="font-size:13px;margin:0 0 14px">Your balance: <b class="num">${S.coins}</b> coins</p>
+      <div class="actions" style="justify-content:center">${S.coins>=b.price?`<button class="btn primary" onclick="unlock('${id}',${n})">Unlock and read</button>`:`<button class="btn gold" data-go="wallet">Get coins</button>`}</div>
+      <label style="display:flex;gap:8px;justify-content:center;margin-top:14px;font-size:13px"><input id="autoun" type="checkbox" ${S.prefs.auto?"checked":""} onchange="S.prefs.auto=this.checked;save()"> Unlock next chapters automatically</label></div>`;
+  return `<div class="reader ${th==="auto"?"":th}" style="--fs:${S.prefs.fs}px">
+    <div class="rbar">
+      <button class="bt" data-go="book" data-id="${id}">← ${esc(b.title)}</button>
+      <div class="rtools">
+        <button onclick="openToc('${id}',${n})">Contents</button>
+        <button aria-label="Smaller text" onclick="fs(-1)">A−</button><button aria-label="Larger text" onclick="fs(1)">A+</button>
+        ${["auto","sepia","night"].map(t=>`<button aria-pressed="${th===t}" onclick="S.prefs.theme='${t}';save();render()">${t==="auto"?"Page":t[0].toUpperCase()+t.slice(1)}</button>`).join("")}
+      </div>
+    </div>
+    <article class="page">
+      <div class="eyebrow" style="color:inherit;opacity:.6">Chapter ${n} of ${b.chapters}</div>
+      <h1>${esc(chTitle(b,n))}</h1>
+      <div class="cm num">${esc(b.author)} · ${words} words${open?" · tap a bubble to see paragraph comments":""}</div>
+      ${body}
+    </article>
+    ${open&&!b.user?`<div class="vote-strip"><button class="btn" onclick="vote('${id}')">Vote power stone (${S.stones} left)</button><button class="btn" onclick="toggleLib('${id}')">${S.library.includes(id)?"✓ In library":"+ Library"}</button></div>`:""}
+    <div class="rnav"><button class="btn" ${n<=1?"disabled":""} data-go="reader" data-id="${id}" data-n="${n-1}">← Previous</button><button class="btn" ${n>=b.chapters?"disabled":""} data-go="reader" data-id="${id}" data-n="${n+1}">Next chapter →</button></div>
+  </div>`;
+}
+function fs(d){S.prefs.fs=Math.max(15,Math.min(26,S.prefs.fs+d));save();document.querySelector(".reader").style.setProperty("--fs",S.prefs.fs+"px");}
+function unlock(id,n){const b=byId(id);if(S.coins<b.price)return go("wallet");S.coins-=b.price;(S.unlocked[id]=S.unlocked[id]||[]).push(n);save();toast(`Unlocked for ${b.price} coins`);render();}
+function cKey(b,n,i){return `${b.id}:${n}:${i}`;}
+function cSeed(b,n,i){if(b.user)return[];const h=hash(cKey(b,n,i));const k=h%5===0?0:(h%4)+(n===1?3:0);const out=[];for(let j=0;j<k;j++){const x=hash(cKey(b,n,i)+j);out.push({u:HANDLES[x%HANDLES.length],t:COMMENTS[(x>>4)%COMMENTS.length],l:(x>>8)%120});}return out;}
+function cCount(b,n,i){return cSeed(b,n,i).length+(S.myComments[cKey(b,n,i)]||[]).length;}
+function openCmts(id,n,i){
+  const b=byId(id);const mine=S.myComments[cKey(b,n,i)]||[];const list=[...mine.map(t=>({u:"you",t,l:0,me:1})),...cSeed(b,n,i)];
+  document.querySelectorAll(".pc").forEach((el,j)=>el.classList.toggle("on",j===i));
+  $("#overlay").innerHTML=`<div class="scrim" onclick="closeOverlay()"></div><aside class="panel" role="dialog" aria-label="Paragraph comments">
+    <header><b>${list.length} comment${list.length===1?"":"s"}</b><button class="close" aria-label="Close" onclick="closeOverlay()">×</button></header>
+    <div class="q">${esc(chText(b,n)[i])}</div>
+    <div class="body">${list.length?list.map(c=>`<div class="cmt"><div class="u">${esc(c.u)}<small>${c.me?"just now":`♥ ${c.l}`}</small></div><p>${esc(c.t)}</p></div>`).join(""):`<div class="empty" style="padding:32px 0">No comments on this paragraph yet. Say what you think.</div>`}</div>
+    <form onsubmit="event.preventDefault();addCmt('${id}',${n},${i},this.c.value)"><input id="cmt-in" name="c" placeholder="Comment on this paragraph" maxlength="280" autocomplete="off"><button class="btn primary">Post</button></form>
+  </aside>`;
+  setTimeout(()=>$("#cmt-in")&&$("#cmt-in").focus(),30);
+}
+function addCmt(id,n,i,t){t=t.trim();if(!t)return;const b=byId(id);const k=cKey(b,n,i);(S.myComments[k]=S.myComments[k]||[]).unshift(t);save();const y=scrollY;render();scrollTo(0,y);openCmts(id,n,i);}
+function openToc(id,cur){
+  const b=byId(id);const start=Math.max(1,cur-30),end=Math.min(b.chapters,cur+60);let h="";
+  for(let n=start;n<=end;n++)h+=`<button class="ch" style="width:100%" data-go="reader" data-id="${id}" data-n="${n}"><span ${n===cur?'style="color:var(--accent);font-weight:700"':""}>${n}. ${esc(chTitle(b,n))}</span>${isOpen(b,n)?"":`<span class="lk num">${b.price}</span>`}</button>`;
+  $("#overlay").innerHTML=`<div class="scrim" onclick="closeOverlay()"></div><aside class="toc" role="dialog" aria-label="Contents"><header><b>Contents</b><button class="close" aria-label="Close" onclick="closeOverlay()">×</button></header><div class="body">${h}<button class="btn ghost" style="margin:12px 0" data-go="book" data-id="${id}">All ${b.chapters} chapters</button></div></aside>`;
+  const c=$(".toc [style*='accent']");c&&c.scrollIntoView({block:"center"});
+}
+function closeOverlay(){$("#overlay").innerHTML="";document.querySelectorAll(".pc.on").forEach(e=>e.classList.remove("on"));}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeOverlay();
+  if(V.name==="reader"&&!e.target.closest("input,textarea,select")){const b=byId(V.p.id),n=V.p.n||1;if(e.key==="ArrowRight"&&n<b.chapters)go("reader",{id:b.id,n:n+1});if(e.key==="ArrowLeft"&&n>1)go("reader",{id:b.id,n:n-1});}});
+
+/* library */
+function library(){
+  const list=S.library.map(byId).filter(Boolean);
+  if(!list.length)return `<div class="empty"><h3>Your library is empty</h3><p>Books you add or start reading appear here with your place saved.</p><button class="btn primary" data-go="browse">Find something to read</button></div>`;
+  return `<section><div class="sec-head"><h2>Library</h2><span class="muted num">${list.length} books</span></div>
+  <div class="shelf">${list.map(b=>{const p=S.progress[b.id]||0;return `<div class="card" style="gap:6px"><button class="card" data-go="reader" data-id="${b.id}" data-n="${p||1}">${cover(b,"md")}<span class="t">${esc(b.title)}</span></button><span class="s muted num" style="font-size:12px">${p?`Ch. ${p} of ${b.chapters}`:"Not started"}</span><div class="prog"><i style="width:${Math.max(2,p/b.chapters*100)}%"></i></div></div>`;}).join("")}</div></section>`;
+}
+
+/* studio */
+let draft={title:"",genre:"Fantasy",syn:"",sw:0,editing:null};
+function studio(){
+  const mine=S.userBooks;
+  const ed=draft.editing?S.userBooks.find(u=>u.id===draft.editing):null;
+  if(ed)return `<section><button class="btn ghost" onclick="draft.editing=null;render()">← Your books</button>
+    <div class="sec-head" style="margin-top:14px"><h2>${esc(ed.title)}</h2><button class="btn" data-go="book" data-id="${ed.id}">View public page</button></div>
+    <div class="two"><form class="form panelbox" onsubmit="event.preventDefault();addChapter('${ed.id}',this)">
+      <div class="eyebrow">New chapter ${ed.ch.length+1}</div>
+      <div class="field"><label for="cht">Chapter title</label><input id="cht" name="t" required maxlength="80" placeholder="The Door Behind the Kitchen"></div>
+      <div class="field"><label for="chb">Text</label><textarea id="chb" name="b" required placeholder="Write the chapter. Leave a blank line between paragraphs; readers can comment on each one."></textarea></div>
+      <label style="display:flex;gap:8px;font-size:14px"><input id="chp" type="checkbox" name="p"> Paid chapter (8 coins)</label>
+      <div><button class="btn primary">Publish chapter</button></div>
+    </form>
+    <div><div class="eyebrow" style="margin-bottom:8px">Published chapters</div>${ed.ch.length?`<div class="list">${ed.ch.map((c,i)=>`<button class="ch" data-go="reader" data-id="${ed.id}" data-n="${i+1}"><span>${i+1}. ${esc(c.title)}</span><span class="${c.paid?"lk":"fr"}">${c.paid?"Paid":"Free"}</span></button>`).join("")}</div>`:`<p class="muted">No chapters yet. Publish the first one and it goes live straight away.</p>`}</div></div></section>`;
+  return `<section class="two">
+  <form class="form panelbox" onsubmit="event.preventDefault();createBook(this)">
+    <div><div class="eyebrow">Author studio</div><h2 style="font-size:28px;margin-top:4px">Start a new book</h2></div>
+    <div class="field"><label for="bt">Title</label><input id="bt" name="t" required maxlength="60" value="${esc(draft.title)}" oninput="draft.title=this.value;prev()"></div>
+    <div class="r2"><div class="field"><label for="bg">Genre</label><select id="bg" name="g" onchange="draft.genre=this.value">${GENRES.map(g=>`<option ${g===draft.genre?"selected":""}>${g}</option>`).join("")}</select></div>
+    <div class="field"><label>Cover colours</label><div class="swatches">${SWATCH.map((s,i)=>`<button type="button" aria-label="Palette ${i+1}" aria-pressed="${i===draft.sw}" style="background:linear-gradient(135deg,${s[0]} 50%,${s[1]} 50%)" onclick="draft.sw=${i};render()"></button>`).join("")}</div></div></div>
+    <div class="field"><label for="bs">Synopsis</label><textarea id="bs" name="s" style="min-height:120px" maxlength="600" placeholder="What is the hook? Who wants what, and what stands in the way?" oninput="draft.syn=this.value">${esc(draft.syn)}</textarea></div>
+    <div><button class="btn primary">Create book</button></div>
+  </form>
+  <div><div class="eyebrow" style="margin-bottom:10px">Cover preview</div><div id="cvprev" style="width:180px">${cover({title:draft.title||"Untitled",author:"You",c:SWATCH[draft.sw],g:(draft.title||"U")[0]},"lg")}</div>
+    <div class="sec-head" style="margin-top:28px"><h2 style="font-size:20px">Your books</h2></div>
+    ${mine.length?`<div class="list ub-list">${mine.map(u=>`<button class="upd" onclick="draft.editing='${u.id}';render()"><span class="t">${esc(u.title)}</span><span class="w">${u.ch.length} ch.</span><span class="c">${u.genre} · edit and add chapters</span></button>`).join("")}</div>`:`<p class="muted">Books you create here are listed in Browse and searchable straight away.</p>`}
+    <p class="note" style="margin-top:16px">Everything you write is saved in this browser only.</p>
+  </div></section>`;
+}
+function prev(){const p=$("#cvprev");if(p)p.innerHTML=cover({title:draft.title||"Untitled",author:"You",c:SWATCH[draft.sw],g:(draft.title||"U")[0]},"lg");}
+function createBook(f){const u={id:"u"+Date.now().toString(36),title:f.t.value.trim(),author:"You",genre:f.g.value,status:"Ongoing",syn:f.s.value.trim()||"No synopsis yet.",c:SWATCH[draft.sw],g:f.t.value.trim()[0],ch:[]};
+  S.userBooks.unshift(u);save();draft={title:"",genre:"Fantasy",syn:"",sw:0,editing:u.id};toast("Book created. Add your first chapter");render();}
+function addChapter(id,f){const u=S.userBooks.find(x=>x.id===id);u.ch.push({title:f.t.value.trim(),body:f.b.value,paid:f.p.checked});save();toast(`Chapter ${u.ch.length} published`);render();}
+
+/* wallet */
+function wallet(){
+  const can=S.checkin!==today();
+  return `<section><div class="sec-head"><h2>Wallet</h2></div>
+  <div class="two"><div>
+    <div class="panelbox" style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+      <div><div class="eyebrow">Balance</div><div style="font-family:var(--f-display);font-size:40px;color:var(--gold)" class="num">${S.coins} <span style="font-size:18px">coins</span></div></div>
+      <button class="btn ${can?"primary":""}" ${can?"":"disabled"} onclick="checkin()">${can?"Daily check-in · +10":"Checked in today"}</button>
+    </div>
+    <div class="eyebrow" style="margin:24px 0 10px">Top up</div>
+    <div class="packs">${[[100,"₹49"],[300,"₹129"],[700,"₹279"],[1500,"₹549"]].map(([c,p],i)=>`<div class="pack"><b class="num">${c}</b><span class="muted">${i?`+${[0,30,100,300][i]} bonus`:"coins"}</span><button class="btn" onclick="topup(${c+[0,30,100,300][i]})">${p}</button></div>`).join("")}</div>
+    <p class="note" style="margin-top:14px">Demo payments: tapping a pack adds coins instantly. A live version would hand off to a UPI or card checkout here.</p>
+  </div>
+  <div class="panelbox"><div class="eyebrow" style="margin-bottom:10px">How coins work</div>
+    <ul style="margin:0;padding-left:18px;display:grid;gap:8px">
+      <li>Early chapters of every book are free.</li><li>Paid chapters cost 8–12 coins, set per book.</li><li>Unlocking every remaining chapter of a book is 20% cheaper.</li><li>You get 3 power stones a day to vote for books you like. They decide the power ranking.</li><li>Unlocked chapters stay yours.</li>
+    </ul></div></div></section>`;
+}
+function checkin(){S.checkin=today();S.coins+=10;save();toast("+10 coins");render();}
+function topup(c){S.coins+=c;save();toast(`+${c} coins added`);render();}
+
+render();
+</script>
+</body>
+</html>
