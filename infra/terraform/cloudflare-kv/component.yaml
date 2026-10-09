@@ -50,4 +50,4 @@ spec:
             when:
               triggerRef: github-push-main
 # ci: re-trigger kv apply with brand-namespaced title (baseline collision fix)
-# orun: redeploy 03-infrastructure as_6ad5af17eaf143339450
+# orun: redeploy 03-infrastructure as_964629f7e1064d649c52
